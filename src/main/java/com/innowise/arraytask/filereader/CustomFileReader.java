@@ -1,6 +1,7 @@
 package com.innowise.arraytask.filereader;
 
 
+import com.innowise.arraytask.exception.CustomArrayException;
 import com.innowise.arraytask.validator.Validator;
 import com.innowise.arraytask.validator.impl.ValidatorImpl;
 
@@ -11,25 +12,26 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileReader {
+public class CustomFileReader {
 
     private final Path filePath;
 
-    public FileReader(Path filePath) {
+    public CustomFileReader(Path filePath) {
         this.filePath = filePath;
     }
 
-
-    public List<String> readValidLines() throws IOException {
+    public List<String> readValidLines() throws CustomArrayException {
         List<String> validLines = new ArrayList<>();
         try (BufferedReader br = Files.newBufferedReader(filePath)) {
             Validator validator = new ValidatorImpl();
             String line;
             while ((line = br.readLine()) != null) {
-                if (validator.isValid(line)) {
+                if (validator.isValidLine(line)) {
                     validLines.add(line);
                 }
             }
+        } catch (IOException e) {
+            throw new CustomArrayException("Exception while reading file " + filePath, e);
         }
         return validLines;
     }

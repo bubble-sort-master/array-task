@@ -28,7 +28,6 @@ public class CustomArray {
         private Builder() {
         }
 
-        ///////?????
         public Builder setElements(int[] elements) {
             CustomArray.this.elements = elements != null ? elements.clone() : null;
             return this;
