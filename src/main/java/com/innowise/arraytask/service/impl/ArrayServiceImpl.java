@@ -3,12 +3,19 @@ package com.innowise.arraytask.service.impl;
 import com.innowise.arraytask.entity.CustomArray;
 import com.innowise.arraytask.service.ArrayService;
 import com.innowise.arraytask.exception.CustomArrayException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ArrayServiceImpl implements ArrayService {
+    private static final Logger logger = LogManager.getLogger(ArrayServiceImpl.class);
+
     @Override
     public int findMin(CustomArray array) throws CustomArrayException {
+        logger.debug("Finding min value for array id: {}", array.getId());
+
         int[] elements = array.getElements();
         if (elements.length == 0) {
+            logger.error("Cannot find min in empty array id: {}", array.getId());
             throw new CustomArrayException("Array is empty");
         }
 
@@ -18,6 +25,7 @@ public class ArrayServiceImpl implements ArrayService {
                 min = elements[i];
             }
         }
+        logger.info("Found min value: {} for array id: {}", min, array.getId());
         return min;
     }
 

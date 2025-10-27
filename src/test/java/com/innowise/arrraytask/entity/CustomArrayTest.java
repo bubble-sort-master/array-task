@@ -1,33 +1,28 @@
 package com.innowise.arrraytask.entity;
 
-// Файл: CustomArrayTest.java
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.innowise.arraytask.entity.CustomArray;
 import org.junit.jupiter.api.Test;
 
-public class CustomArrayTest {
+class CustomArrayTest {
 
     @Test
-    public void testBuilderCreatesCustomArrayCorrectly() {//naming?
-        // Исходные данные
-        int[] elements = new int[0];
-        long id = 123;
+    void shouldBeImmutableAndReturnDefensiveCopies() {
+        int[] originalElements = {1, 2, 3};
+        long id = 123L;
 
-        // Создание объекта CustomArray через билдер
-        CustomArray customArray = CustomArray.newBuilder()
-                .setElements(elements)
+        CustomArray array = CustomArray.newBuilder()
+                .setElements(originalElements)
                 .setId(id)
                 .build();
 
-        assertNotNull(customArray, "CustomArray object should not be null");
+        originalElements[0] = 999;
 
-        assertArrayEquals(elements, customArray.getElements(), "Elements should match the given array");
+        array.getElements()[0] = 888;
 
-        assertEquals(id, customArray.getId(), "ID should match the given id");
-
-        //elements[0] = 99;
-        //int[] clonedElements = customArray.getElements();
-        //assertNotEquals(99, clonedElements[0], "The elements array should be cloned and not be affected by external modification");
+        assertArrayEquals(new int[]{1, 2, 3}, array.getElements(),
+                "CustomArray should return a copy");
+        assertEquals(id, array.getId());
     }
 }
