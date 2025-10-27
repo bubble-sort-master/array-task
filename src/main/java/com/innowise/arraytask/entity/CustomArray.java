@@ -48,12 +48,12 @@ public class CustomArray {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomArray that = (CustomArray) o;
-        return id == that.id && Objects.deepEquals(elements, that.elements);
+        return id == that.id && Arrays.equals(elements, that.elements);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Arrays.hashCode(elements), id);
+        return java.util.Arrays.hashCode(elements);
     }
 }
 
