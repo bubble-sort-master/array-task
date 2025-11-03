@@ -5,6 +5,7 @@ import com.innowise.arraytask.exception.CustomArrayException;
 import com.innowise.arraytask.service.ArrayService;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class ArrayServiseStreamImpl implements ArrayService {
 
@@ -23,33 +24,27 @@ public class ArrayServiseStreamImpl implements ArrayService {
     }
 
     @Override
-    public CustomArray replaceValues(CustomArray array, int valueToReplace, int newValue) {
-        int[] elements = array.getElements();
-        int[] newElements = Arrays.stream(elements)
+    public void replaceValues(CustomArray array, int valueToReplace, int newValue) {
+        int[] newElements = Arrays.stream(array.getElements())
                 .map(element -> element == valueToReplace ? newValue : element)
                 .toArray();
 
-        return CustomArray.newBuilder()
-                .setElements(newElements)
-                .setId(array.getId())
-                .build();
+        array.setElements(newElements);
     }
 
     @Override
-    public CustomArray replaceAtIndex(CustomArray array, int index, int newValue) throws CustomArrayException {
+    public void replaceAtIndex(CustomArray array, int index, int newValue) throws CustomArrayException {
         int[] elements = array.getElements();
 
         if (index < 0 || index >= elements.length) {
             throw new CustomArrayException("Index " + index + " is out of bounds for array length " + elements.length);
         }
+        
+        int[] newElements = IntStream.range(0, elements.length)
+                .map(i -> i == index ? newValue : elements[i])
+                .toArray();
 
-        int[] newElements = elements.clone();
-        newElements[index] = newValue;
-
-        return CustomArray.newBuilder()
-                .setElements(newElements)
-                .setId(array.getId())
-                .build();
+        array.setElements(newElements);
     }
 
     @Override
