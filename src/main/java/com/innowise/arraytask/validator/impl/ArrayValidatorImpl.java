@@ -1,12 +1,12 @@
 package com.innowise.arraytask.validator.impl;
 
-import com.innowise.arraytask.validator.Validator;
+import com.innowise.arraytask.validator.ArrayValidator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ValidatorImpl implements Validator {
-    private static final Logger logger = LogManager.getLogger(ValidatorImpl.class);
+public class ArrayValidatorImpl implements ArrayValidator {
+    private static final Logger logger = LogManager.getLogger(ArrayValidatorImpl.class);
 
     @Override
     public boolean isValidLine(String line) {

@@ -1,4 +1,4 @@
-package com.innowise.arraytask.warehouse;
+package com.innowise.arraytask.entity;
 
 public class ArrayParameters {
     private final int sum;

@@ -31,8 +31,11 @@ public class ArrayServiceImpl implements ArrayService {
 
     @Override
     public int findMax(CustomArray array) throws CustomArrayException {
+        logger.debug("Finding max value for array id: {}", array.getId());
+
         int[] elements = array.getElements();
         if (elements.length == 0) {
+            logger.error("Cannot find max in empty array id: {}", array.getId());
             throw new CustomArrayException("Array is empty");
         }
 
@@ -42,11 +45,15 @@ public class ArrayServiceImpl implements ArrayService {
                 max = elements[i];
             }
         }
+        logger.info("Found max value: {} for array id: {}", max, array.getId());
         return max;
     }
 
     @Override
-    public CustomArray replaceValues(CustomArray array, int valueToReplace, int newValue) {
+    public void replaceValues(CustomArray array, int valueToReplace, int newValue) {
+        logger.debug("Replacing values in array id: {} - {} -> {}",
+                array.getId(), valueToReplace, newValue);
+
         int[] elements = array.getElements();
         int[] newElements = elements.clone();
 
@@ -56,33 +63,21 @@ public class ArrayServiceImpl implements ArrayService {
             }
         }
 
-        return CustomArray.newBuilder()
-                .setElements(newElements)
-                .setId(array.getId())
-                .build();
-    }
-
-    @Override
-    public CustomArray replaceAtIndex(CustomArray array, int index, int newValue) throws CustomArrayException {
-        int[] elements = array.getElements();
-
-        if (index < 0 || index >= elements.length) {
-            throw new CustomArrayException("Index " + index + " is out of bounds for array length " + elements.length);
+        try {
+            array.setElements(newElements);
+            logger.info("Values replaced successfully in array id: {}", array.getId());
+        } catch (CustomArrayException e) {
+            logger.error("Failed to replace values in array id {}: {}", array.getId(), e.getMessage(), e);
         }
-
-        int[] newElements = elements.clone();
-        newElements[index] = newValue;
-
-        return CustomArray.newBuilder()
-                .setElements(newElements)
-                .setId(array.getId())
-                .build();
     }
 
     @Override
     public int calculateAverage(CustomArray array) throws CustomArrayException {
+        logger.debug("Calculating average for array id: {}", array.getId());
+
         int[] elements = array.getElements();
         if (elements.length == 0) {
+            logger.error("Cannot calculate average of empty array id: {}", array.getId());
             throw new CustomArrayException("Cannot calculate average of empty array");
         }
 
@@ -90,13 +85,18 @@ public class ArrayServiceImpl implements ArrayService {
         for (int element : elements) {
             sum += element;
         }
-        return (int) (sum / elements.length);
+        int average = (int) (sum / elements.length);
+        logger.info("Calculated average: {} for array id: {}", average, array.getId());
+        return average;
     }
 
     @Override
     public int calculateSum(CustomArray array) throws CustomArrayException {
+        logger.debug("Calculating sum for array id: {}", array.getId());
+
         int[] elements = array.getElements();
         if (elements.length == 0) {
+            logger.error("Cannot calculate sum of empty array id: {}", array.getId());
             throw new CustomArrayException("Cannot calculate sum of empty array");
         }
 
@@ -104,11 +104,14 @@ public class ArrayServiceImpl implements ArrayService {
         for (int element : elements) {
             sum += element;
         }
+        logger.info("Calculated sum: {} for array id: {}", sum, array.getId());
         return sum;
     }
 
     @Override
     public int countPositive(CustomArray array) {
+        logger.debug("Counting positive values for array id: {}", array.getId());
+
         int[] elements = array.getElements();
         int count = 0;
         for (int element : elements) {
@@ -116,11 +119,14 @@ public class ArrayServiceImpl implements ArrayService {
                 count++;
             }
         }
+        logger.info("Found {} positive values for array id: {}", count, array.getId());
         return count;
     }
 
     @Override
     public int countNegative(CustomArray array) {
+        logger.debug("Counting negative values for array id: {}", array.getId());
+
         int[] elements = array.getElements();
         int count = 0;
         for (int element : elements) {
@@ -128,6 +134,7 @@ public class ArrayServiceImpl implements ArrayService {
                 count++;
             }
         }
+        logger.info("Found {} negative values for array id: {}", count, array.getId());
         return count;
     }
 }

@@ -3,14 +3,20 @@ package com.innowise.arraytask.service.impl;
 import com.innowise.arraytask.entity.CustomArray;
 import com.innowise.arraytask.exception.CustomArrayException;
 import com.innowise.arraytask.service.ArraySortService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ArraySortServiceImpl implements ArraySortService {
 
+    private static final Logger logger = LogManager.getLogger(ArraySortServiceImpl.class);
+
     @Override
-    public CustomArray bubbleSort(CustomArray array) throws CustomArrayException {
+    public void bubbleSort(CustomArray array) {
+        logger.debug("Starting bubble sort for array id: {}", array.getId());
         int[] elements = array.getElements();
         if (elements.length == 0) {
-            throw new CustomArrayException("Cannot sort empty array");
+            logger.error("Cannot sort empty array id: {}", array.getId());
+            throw new RuntimeException(new CustomArrayException("Cannot sort empty array"));
         }
 
         int[] sortedArray = elements.clone();
@@ -26,14 +32,22 @@ public class ArraySortServiceImpl implements ArraySortService {
             }
         }
 
-        return createSortedArray(array, sortedArray);
+        try {
+            array.setElements(sortedArray);
+            logger.info("Bubble sort completed for array id: {}", array.getId());
+        } catch (CustomArrayException e) {
+            logger.error("Failed to set sorted elements for array id {}: {}", array.getId(), e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public CustomArray selectionSort(CustomArray array) throws CustomArrayException {
+    public void selectionSort(CustomArray array) {
+        logger.debug("Starting selection sort for array id: {}", array.getId());
         int[] elements = array.getElements();
         if (elements.length == 0) {
-            throw new CustomArrayException("Cannot sort empty array");
+            logger.error("Cannot sort empty array id: {}", array.getId());
+            throw new RuntimeException(new CustomArrayException("Cannot sort empty array"));
         }
 
         int[] sortedArray = elements.clone();
@@ -51,14 +65,22 @@ public class ArraySortServiceImpl implements ArraySortService {
             sortedArray[i] = temp;
         }
 
-        return createSortedArray(array, sortedArray);
+        try {
+            array.setElements(sortedArray);
+            logger.info("Selection sort completed for array id: {}", array.getId());
+        } catch (CustomArrayException e) {
+            logger.error("Failed to set sorted elements for array id {}: {}", array.getId(), e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public CustomArray insertionSort(CustomArray array) throws CustomArrayException {
+    public void insertionSort(CustomArray array) {
+        logger.debug("Starting insertion sort for array id: {}", array.getId());
         int[] elements = array.getElements();
         if (elements.length == 0) {
-            throw new CustomArrayException("Cannot sort empty array");
+            logger.error("Cannot sort empty array id: {}", array.getId());
+            throw new RuntimeException(new CustomArrayException("Cannot sort empty array"));
         }
 
         int[] sortedArray = elements.clone();
@@ -75,14 +97,12 @@ public class ArraySortServiceImpl implements ArraySortService {
             sortedArray[j + 1] = key;
         }
 
-        return createSortedArray(array, sortedArray);
-    }
-
-
-    private CustomArray createSortedArray(CustomArray originalArray, int[] sortedElements) {
-        return CustomArray.newBuilder()
-                .setElements(sortedElements)
-                .setId(originalArray.getId())
-                .build();
+        try {
+            array.setElements(sortedArray);
+            logger.info("Insertion sort completed for array id: {}", array.getId());
+        } catch (CustomArrayException e) {
+            logger.error("Failed to set sorted elements for array id {}: {}", array.getId(), e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
     }
 }

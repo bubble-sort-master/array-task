@@ -1,35 +1,32 @@
-package com.innowise.arraytask.repository.impl;
+package com.innowise.arraytask.repository;
 
 import com.innowise.arraytask.comparator.CustomArrayComparator;
 import com.innowise.arraytask.entity.CustomArray;
-import com.innowise.arraytask.repository.ArrayRepository;
 import com.innowise.arraytask.specification.Specification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ArrayRepositoryImpl implements ArrayRepository {
-    private static final Logger logger = LogManager.getLogger(ArrayRepositoryImpl.class);
-    private static ArrayRepositoryImpl instance;
+public class ArrayRepository{
+    private static final Logger logger = LogManager.getLogger(ArrayRepository.class);
+    private static ArrayRepository instance;
     private List<CustomArray> arrays;
 
-    private ArrayRepositoryImpl() {
+    private ArrayRepository() {
         arrays = new ArrayList<>();
-        logger.debug("ArrayRepositoryImpl instance created");
+        logger.debug("ArrayRepository instance created");
     }
 
-    public static ArrayRepositoryImpl getInstance() {
+    public static ArrayRepository getInstance() {
         if (instance == null) {
-            instance = new ArrayRepositoryImpl();
+            instance = new ArrayRepository();
         }
         return instance;
     }
 
-    @Override
     public void add(CustomArray array) {
         if (array != null) {
             arrays.add(array);
@@ -37,14 +34,6 @@ public class ArrayRepositoryImpl implements ArrayRepository {
         }
     }
 
-    @Override
-    public void remove(CustomArray array) {
-        if (arrays.remove(array)) {
-            logger.debug("CustomArray removed from repository - ID: {}", array.getId());
-        }
-    }
-
-    @Override
     public void removeById(long id) {
         boolean removed = arrays.removeIf(array -> array.getId() == id);
         if (removed) {
@@ -52,26 +41,6 @@ public class ArrayRepositoryImpl implements ArrayRepository {
         }
     }
 
-    @Override
-    public CustomArray getById(long id) {
-        CustomArray result = arrays.stream()
-                .filter(array -> array.getId() == id)
-                .findFirst()
-                .orElse(null);
-
-        if (result == null) {
-            logger.debug("CustomArray not found in repository - ID: {}", id);
-        }
-        return result;
-    }
-
-    @Override
-    public List<CustomArray> getAll() {
-        logger.debug("Retrieving all arrays from repository - total: {}", arrays.size());
-        return new ArrayList<>(arrays);
-    }
-
-    @Override
     public List<CustomArray> query(Specification specification) {
         List<CustomArray> result = arrays.stream()
                 .filter(specification::specify)
@@ -81,7 +50,6 @@ public class ArrayRepositoryImpl implements ArrayRepository {
         return result;
     }
 
-    @Override
     public List<CustomArray> sort(CustomArrayComparator comparator) {
         List<CustomArray> result = arrays.stream()
                 .sorted(comparator)
