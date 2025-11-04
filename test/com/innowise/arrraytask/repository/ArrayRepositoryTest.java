@@ -1,4 +1,4 @@
-package com.innowise.arrraytask.repositorytest;
+package com.innowise.arrraytask.repository;
 
 import com.innowise.arraytask.comparator.CustomArrayComparator;
 import com.innowise.arraytask.entity.CustomArray;
